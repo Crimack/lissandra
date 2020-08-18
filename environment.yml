@@ -1,4 +1,4 @@
-name: cass_rtd
+name: lissandra_rtd
 dependencies:
   - flake8
   - pytest

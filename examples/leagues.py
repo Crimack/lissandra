@@ -34,5 +34,6 @@ def print_leagues(summoner_name: str, region: str):
     masters = cass.get_master_league(queue=Queue.ranked_solo_fives, region=region)
     print(masters.name)
 
+
 if __name__ == "__main__":
     print_leagues("Kalturi", "NA")

@@ -1,5 +1,5 @@
-import cassiopeia as cass
-from cassiopeia import TFTSummoner
+import lissandra as liss
+from lissandra import TFTSummoner
 
 
 def print_summoner(name: str, region: str):

@@ -5,26 +5,20 @@ import sys
 from setuptools import setup, find_packages
 
 
-install_requires = [
-    "datapipelines>=1.0.7",
-    "merakicommons>=1.0.7",
-    "Pillow",
-    "arrow",
-    "requests"
-]
+install_requires = ["datapipelines>=1.0.7", "merakicommons>=1.0.7", "Pillow", "arrow", "requests"]
 
 # Require python 3.6
-if sys.version_info.major != 3 and sys.version_info.minor != 6:
-    sys.exit("Cassiopeia requires Python 3.6.")
+if sys.version_info.major != 3 and sys.version_info.minor < 6:
+    sys.exit("Lissandra requires at least Python 3.6.")
 
 setup(
-    name="cassiopeia",
-    version="4.0.13",  # Keep the Cass version at parity with the Riot API major version, use the minor version for breaking changes, and the patch version for everything else
-    author="Jason Maldonis; Rob Rua",
-    author_email="team@merakianalytics.com",
-    url="https://github.com/meraki-analytics/cassiopeia",
+    name="lissandra",
+    version="1.0.0",  # Keep the Liss version at parity with the Riot API major version, use the minor version for breaking changes, and the patch version for everything else
+    author="Christopher McKee",
+    author_email="cmckee41@qub.ac.uk",
+    url="https://github.com/crimack/lissandra",
     description="Riot Games Developer API Wrapper (3rd Party)",
-    keywords=["LoL", "League of Legends", "Riot Games", "API", "REST"],
+    keywords=["LoL", "League of Legends", "Riot Games", "TeamFight Tactics", "TFT", "API", "REST"],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Programming Language :: Python :: 3",
@@ -41,5 +35,5 @@ setup(
     packages=find_packages(),
     zip_safe=True,
     install_requires=install_requires,
-    include_package_data=True
+    include_package_data=True,
 )

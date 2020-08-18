@@ -1,5 +1,5 @@
-import cassiopeia as cass
-from cassiopeia import LanguageStrings
+import lissandra as liss
+from lissandra import LanguageStrings
 
 
 def get_language_strings():
