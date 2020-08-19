@@ -4,15 +4,12 @@ import unittest
 from unittest.mock import patch
 
 from lissandra import lissandra
+
 from .constants import LEAGUE_UUID, SUMMONER_NAME
+from .test_util import BaseTest
 
 
-class TestLeague(unittest.TestCase):
-    def setUp(self):
-        lissandra.apply_settings(lissandra.get_default_config())
-        lissandra.set_riot_api_key(os.environ.get("RIOT_API_KEY"))
-        lissandra.apply_settings({"global": {"default_region": "NA"}})
-
+class TestLeague(BaseTest):
     def test_access_league_properties(self):
         lg = lissandra.League(id=LEAGUE_UUID)
         self.assertIsNotNone(lg.region)

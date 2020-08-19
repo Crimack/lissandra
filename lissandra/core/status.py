@@ -13,7 +13,7 @@ from .common import CoreData, CassiopeiaObject, CassiopeiaGhost, provide_default
 
 
 class TranslationData(CoreData):
-    _renamed = {"updated_at": "updated"}
+    _renamed = {}
 
 
 class MessageData(CoreData):
@@ -95,7 +95,7 @@ class Message(CassiopeiaObject):
 
     @property
     def translations(self) -> List[Translation]:
-        return SearchableList([Translation(trans) for trans in self._data[MessageData].translations])
+        return SearchableList([trans for trans in self._data[MessageData].translations])
 
     @property
     def updated(self) -> str:
