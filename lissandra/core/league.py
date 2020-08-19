@@ -4,7 +4,7 @@ from merakicommons.cache import lazy_property, lazy
 from merakicommons.container import searchable, SearchableList
 
 from .. import configuration
-from ..data import Region, Platform, Tier, Division, Queue
+from ..data import Region, Platform, Tier, Division
 from .common import (
     CoreData,
     CoreDataList,
@@ -41,14 +41,7 @@ class LeagueEntryData(CoreData):
     """Contains the data for one entry (summoner) in a League."""
 
     _dto_type = LeagueEntryDto
-    _renamed = {
-        "miniSeries": "promos",
-        "playerOrTeamId": "summonerId",
-        "playerOrTeamName": "summonerName",
-        "leagueName": "name",
-        "queueType": "queue",
-        "rank": "division",
-    }
+    _renamed = {"rank": "division"}
 
     def __call__(self, **kwargs):
         if "miniSeries" in kwargs:
@@ -338,16 +331,16 @@ class LeagueSummonerEntries(CassiopeiaLazyList):
         return self.region.platform
 
 
-@searchable({str: ["tier", "queue", "name"], Queue: ["queue"], Tier: ["tier"]})
+@searchable({str: ["tier", "name"], Tier: ["tier"]})
 class League(CassiopeiaGhost):
     _data_types = {LeagueData}
 
-    def __init__(self, id: str = None, queue: Queue = None, region: Union[Region, str] = None):
+    def __init__(self, id: str = None, region: Union[Region, str] = None):
         if region is None:
             region = configuration.settings.default_region
         if region is not None and not isinstance(region, Region):
             region = Region(region)
-        kwargs = {"id": id, "region": region, "queue": queue}
+        kwargs = {"id": id, "region": region}
         super().__init__(**kwargs)
 
     def __get_query__(self):
@@ -394,12 +387,6 @@ class League(CassiopeiaGhost):
 
     @CassiopeiaGhost.property(LeagueData)
     @ghost_load_on
-    @lazy
-    def queue(self) -> Queue:
-        return Queue(self._data[LeagueData].queue)
-
-    @CassiopeiaGhost.property(LeagueData)
-    @ghost_load_on
     def name(self) -> str:
         return self._data[LeagueData].name
 
@@ -415,11 +402,11 @@ class League(CassiopeiaGhost):
         return SearchableList(entries)
 
 
-class ChallengerLeague(League):
+class ChallengerLeague(CassiopeiaGhost):
     _data_types = {ChallengerLeagueListData}
 
     @provide_default_region
-    def __init__(self, *, queue: Union[Queue, str, int] = None, region: Union[Region, str] = None):
+    def __init__(self, *, region: Union[Region, str] = None):
         kwargs = {"region": region}
         super().__init__(**kwargs)
 
@@ -466,7 +453,7 @@ class GrandmasterLeague(CassiopeiaGhost):
     _data_types = {GrandmasterLeagueListData}
 
     @provide_default_region
-    def __init__(self, *, queue: Union[Queue, str, int] = None, region: Union[Region, str] = None):
+    def __init__(self, *, region: Union[Region, str] = None):
         kwargs = {"region": region}
         super().__init__(**kwargs)
 
@@ -503,10 +490,6 @@ class GrandmasterLeague(CassiopeiaGhost):
     def tier(self) -> Tier:
         return Tier.grandmaster
 
-    @lazy_property
-    def queue(self) -> Queue:
-        return Queue(self._data[GrandmasterLeagueListData].queue)
-
     @CassiopeiaGhost.property(GrandmasterLeagueListData)
     @ghost_load_on
     def name(self) -> str:
@@ -523,7 +506,7 @@ class MasterLeague(CassiopeiaGhost):
     _data_types = {MasterLeagueListData}
 
     @provide_default_region
-    def __init__(self, *, queue: Union[Queue, str, int] = None, region: Union[Region, str] = None):
+    def __init__(self, *, region: Union[Region, str] = None):
         kwargs = {"region": region}
         super().__init__(**kwargs)
 
@@ -533,7 +516,7 @@ class MasterLeague(CassiopeiaGhost):
     def __eq__(self, other: "MasterLeague"):
         if not isinstance(other, MasterLeague) or self.region != other.region:
             return False
-        return self.queue == other.queue
+        return True
 
     __hash__ = CassiopeiaGhost.__hash__
 
@@ -559,10 +542,6 @@ class MasterLeague(CassiopeiaGhost):
     @lazy_property
     def tier(self) -> Tier:
         return Tier.master
-
-    @lazy_property
-    def queue(self) -> Queue:
-        return Queue(self._data[MasterLeagueListData].queue)
 
     @CassiopeiaGhost.property(MasterLeagueListData)
     @ghost_load_on

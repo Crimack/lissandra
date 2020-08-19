@@ -1,15 +1,15 @@
-import cassiopeia as cass
+import lissandra as liss
 
 
 def get_versions():
-    versions = cass.get_versions(region="NA")
+    versions = liss.get_versions(region="NA")
     print(versions[0])
     print(versions.region)
 
-    versions = cass.get_versions(region="NA")
+    versions = liss.get_versions(region="NA")
     print(versions[0])
 
-    realms = cass.get_realms(region="NA")
+    realms = liss.get_realms(region="NA")
     print(realms.latest_versions)
 
 

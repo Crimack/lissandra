@@ -76,16 +76,20 @@ def get_paginated_league_entries(tier: Tier, division: Division, region: Union[R
     return LeagueEntries(region=region, tier=tier, division=division)
 
 
-def get_master_league(queue: Union[Queue, int, str], region: Union[Region, str] = None) -> MasterLeague:
-    return MasterLeague(queue=queue, region=region)
+def get_league(league_id: str, region: Union[Region, str] = None) -> League:
+    return League(id=league_id, region=region)
 
 
-def get_grandmaster_league(queue: Union[Queue, int, str], region: Union[Region, str] = None) -> GrandmasterLeague:
-    return GrandmasterLeague(queue=queue, region=region)
+def get_master_league(region: Union[Region, str] = None) -> MasterLeague:
+    return MasterLeague(region=region)
 
 
-def get_challenger_league(queue: Union[Queue, int, str], region: Union[Region, str] = None) -> ChallengerLeague:
-    return ChallengerLeague(queue=queue, region=region)
+def get_grandmaster_league(region: Union[Region, str] = None) -> GrandmasterLeague:
+    return GrandmasterLeague(region=region)
+
+
+def get_challenger_league(region: Union[Region, str] = None) -> ChallengerLeague:
+    return ChallengerLeague(region=region)
 
 
 def get_tft_summoner(

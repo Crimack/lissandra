@@ -2,7 +2,7 @@ from typing import Tuple, Set, Union, MutableMapping, Any, Mapping, Iterable, Ge
 
 from datapipelines import Query, PipelineContext, QueryValidationError
 
-from ..data import Region, Platform, Queue, Tier, Division
+from ..data import Region, Platform, Tier, Division
 
 from ..dto.league import LeagueEntriesDto, LeagueSummonerEntriesDto, LeagueEntryDto
 from ..dto.staticdata import (
@@ -55,31 +55,21 @@ from .util import (
 ##############
 
 validate_league_entries_dto_query = (
-    Query.has("platform")
-    .as_(Platform)
-    .also.has("queue")
-    .as_(Queue)
-    .also.has("tier")
-    .as_(Tier)
-    .also.has("page")
-    .as_(int)
-    .also.has("id")
-    .as_(int)
+    Query.has("platform").as_(Platform).also.has("tier").as_(Tier).also.has("page").as_(int).also.has("id").as_(int)
 )  # League ID
 
 
-def for_league_entries_dto(league_entries: LeagueEntriesDto) -> Tuple[str, str, str, int, int]:
+def for_league_entries_dto(league_entries: LeagueEntriesDto) -> Tuple[str, str, int, int]:
     return (
         league_entries["platform"],
-        league_entries["queue"],
         league_entries["tier"],
         league_entries["id"],
         league_entries["page"],
     )
 
 
-def for_league_entries_dto_query(query: Query) -> Tuple[str, str, str, int, int]:
-    return query["platform"].value, query["queue"].value, query["tier"].value, query["id"], query["page"]
+def for_league_entries_dto_query(query: Query) -> Tuple[str, str, int, int]:
+    return query["platform"].value, query["tier"].value, query["id"], query["page"]
 
 
 validate_league_tft_summoner_entries_dto_query = (
@@ -408,96 +398,56 @@ def for_many_league_query(query: Query) -> Generator[List[Tuple[str, str]], None
 
 # Challenger
 
-validate_challenger_league_query = Query.has("platform").as_(Platform).also.has("queue").as_(Queue)
+validate_challenger_league_query = Query.has("platform").as_(Platform)
 
 
-validate_many_challenger_league_query = Query.has("platform").as_(Platform).also.has("queues").as_(Iterable)
+def for_challenger_league(league: ChallengerLeague) -> List[Tuple[str]]:
+    return [(league.platform.value)]
 
 
-def for_challenger_league(league: ChallengerLeague) -> List[Tuple[str, str]]:
-    return [(league.platform.value, league.queue.value)]
-
-
-def for_challenger_league_query(query: Query) -> List[Tuple[str, str]]:
-    return [(query["platform"].value, query["queue"].value)]
-
-
-def for_many_challenger_league_query(query: Query) -> Generator[List[Tuple[str, str]], None, None]:
-    for queue in query["queues"]:
-        try:
-            yield [(query["platform"].value, queue.value)]
-        except ValueError as e:
-            raise QueryValidationError from e
+def for_challenger_league_query(query: Query) -> List[Tuple[str]]:
+    return [(query["platform"].value)]
 
 
 # Grandmaster
 
-validate_grandmaster_league_query = Query.has("platform").as_(Platform).also.has("queue").as_(Queue)
+validate_grandmaster_league_query = Query.has("platform").as_(Platform)
 
 
-validate_many_grandmaster_league_query = Query.has("platform").as_(Platform).also.has("queues").as_(Iterable)
-
-
-def for_grandmaster_league(league: GrandmasterLeague) -> List[Tuple[str, str]]:
+def for_grandmaster_league(league: GrandmasterLeague) -> List[Tuple[str]]:
     return [(league.platform.value, league.queue.value)]
 
 
-def for_grandmaster_league_query(query: Query) -> List[Tuple[str, str]]:
-    return [(query["platform"].value, query["queue"].value)]
-
-
-def for_many_grandmaster_league_query(query: Query) -> Generator[List[Tuple[str, str]], None, None]:
-    for queue in query["queues"]:
-        try:
-            yield [(query["platform"].value, queue.value)]
-        except ValueError as e:
-            raise QueryValidationError from e
+def for_grandmaster_league_query(query: Query) -> List[Tuple[str]]:
+    return [(query["platform"].value)]
 
 
 # Master
 
-validate_master_league_query = Query.has("platform").as_(Platform).also.has("queue").as_(Queue)
+validate_master_league_query = Query.has("platform").as_(Platform)
 
 
-validate_many_master_league_query = Query.has("platform").as_(Platform).also.has("queues").as_(Iterable)
+def for_master_league(league: MasterLeague) -> List[Tuple[str]]:
+    return [(league.platform.value)]
 
 
-def for_master_league(league: MasterLeague) -> List[Tuple[str, str]]:
-    return [(league.platform.value, league.queue.value)]
-
-
-def for_master_league_query(query: Query) -> List[Tuple[str, str]]:
-    return [(query["platform"].value, query["queue"].value)]
-
-
-def for_many_master_league_query(query: Query) -> Generator[List[Tuple[str, str]], None, None]:
-    for queue in query["queues"]:
-        try:
-            yield [(query["platform"].value, queue.value)]
-        except ValueError as e:
-            raise QueryValidationError from e
+def for_master_league_query(query: Query) -> List[Tuple[str]]:
+    return [(query["platform"].value)]
 
 
 # League Entries List
 
 validate_league_entries_list_query = (
-    Query.has("queue")
-    .as_(Queue)
-    .also.has("tier")
-    .as_(Tier)
-    .also.has("division")
-    .as_(Division)
-    .also.has("platform")
-    .as_(Platform)
+    Query.has("tier").as_(Tier).also.has("division").as_(Division).also.has("platform").as_(Platform)
 )
 
 
-def for_league_entries_list(lel: LeagueSummonerEntries) -> List[Tuple[str, str, str, str]]:
-    return [(lel.platform.value, lel.queue.value, lel.tier.value, lel.division.value)]
+def for_league_entries_list(lel: LeagueSummonerEntries) -> List[Tuple[str, str, str]]:
+    return [(lel.platform.value, lel.tier.value, lel.division.value)]
 
 
-def for_league_entries_list_query(query: Query) -> List[Tuple[str, str, str, str]]:
-    return [(query["platform"].value, query["queue"].value, query["tier"].value, query["division"].value)]
+def for_league_entries_list_query(query: Query) -> List[Tuple[str, str, str]]:
+    return [(query["platform"].value, query["tier"].value, query["division"].value)]
 
 
 ###################

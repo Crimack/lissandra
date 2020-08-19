@@ -24,6 +24,7 @@ from .data import Division, GameType, Platform, Queue, Rank, Region, Resource, T
 from .lissandra import (
     _get_pipeline,
     apply_settings,
+    get_league,
     get_challenger_league,
     get_grandmaster_league,
     get_language_strings,

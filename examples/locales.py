@@ -1,9 +1,9 @@
-import cassiopeia as cass
-from cassiopeia import Locales
+import lissandra as liss
+from lissandra import Locales
 
 
 def get_locales():
-    locales = cass.get_locales(region="NA")
+    locales = liss.get_locales(region="NA")
     print(locales)
     for locale in locales:
         print(locale)

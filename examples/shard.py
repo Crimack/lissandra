@@ -1,9 +1,9 @@
-import cassiopeia as cass
-from cassiopeia import ShardStatus
+import lissandra as liss
+from lissandra import ShardStatus
 
 
 def get_shard():
-    status = cass.get_status(region="NA")
+    status = liss.get_status(region="NA")
     status = ShardStatus(region="NA")
     print(status.name)
 

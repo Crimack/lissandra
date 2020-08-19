@@ -19,4 +19,3 @@ class TestPatches(BaseTest):
         self.assertTrue(Patch.from_str("9.9", region="EUW") < Patch.from_str("9.10", region="EUW"))
         self.assertTrue(Patch.from_str("8.20", region="EUW") > Patch.from_str("8.11", region="EUW"))
         self.assertTrue(Patch.from_str("8.20", region="EUW") > Patch.from_str("8.3", region="EUW"))
-

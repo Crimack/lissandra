@@ -66,4 +66,3 @@ class TestLeague(BaseTest):
         "Profile icon name:", summoner.profile_icon.name
         "Profile icon URL:", summoner.profile_icon.url
         "Profile icon image:", summoner.profile_icon.image
-

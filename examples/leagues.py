@@ -1,6 +1,6 @@
-import cassiopeia as cass
-from cassiopeia.data import Queue, Position
-from cassiopeia.core import Summoner
+import lissandra as liss
+from lissandra.data import Queue, Position
+from lissandra.core import Summoner
 
 
 def print_leagues(summoner_name: str, region: str):
@@ -8,7 +8,7 @@ def print_leagues(summoner_name: str, region: str):
     print("Name:", summoner.name)
     print("ID:", summoner.id)
 
-    # entries = cass.get_league_entries(summoner, region=region)
+    # entries = liss.get_league_entries(summoner, region=region)
     entries = summoner.league_entries
     if entries.fives.promos is not None:
         # If the summoner is in their promos, print some info
@@ -31,7 +31,7 @@ def print_leagues(summoner_name: str, region: str):
 
     print()
     print("Master's League name:")
-    masters = cass.get_master_league(queue=Queue.ranked_solo_fives, region=region)
+    masters = liss.get_master_league(queue=Queue.ranked_solo_fives, region=region)
     print(masters.name)
 
 

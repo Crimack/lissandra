@@ -1,5 +1,5 @@
-import cassiopeia as cass
-from cassiopeia import Summoner, VerificationString
+import lissandra as liss
+from lissandra import Summoner, VerificationString
 
 
 def get_verification_string():

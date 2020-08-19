@@ -3,7 +3,7 @@ from lissandra import LanguageStrings
 
 
 def get_language_strings():
-    language_strings = cass.get_language_strings(region="NA")
+    language_strings = liss.get_language_strings(region="EUW")
     print(language_strings.strings)
 
 

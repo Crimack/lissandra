@@ -87,35 +87,21 @@ class UnloadedGhostStore(DataSource):
     _validate_get_paginated_queues_query = Query.has("platform").as_(Platform)
 
     _validate_get_league_entries_query = (
-        Query.has("tier")
-        .as_(Tier)
-        .also.has("division")
-        .as_(Division)
-        .also.has("queue")
-        .as_(Queue)
-        .also.has("platform")
-        .as_(Platform)
+        Query.has("tier").as_(Tier).also.has("division").as_(Division).also.has("platform").as_(Platform)
     )
 
     _validate_get_league_summoner_entries_query = Query.has("summoner.id").as_(str).also.has("platform").as_(Platform)
 
     _validate_get_league_query = Query.has("id").as_(str).also.has("platform").as_(Platform)
 
-    _validate_get_challenger_league_query = Query.has("queue").as_(Queue).also.has("platform").as_(Platform)
+    _validate_get_challenger_league_query = Query.has("platform").as_(Platform)
 
-    _validate_get_grandmaster_league_query = Query.has("queue").as_(Queue).also.has("platform").as_(Platform)
+    _validate_get_grandmaster_league_query = Query.has("platform").as_(Platform)
 
-    _validate_get_master_league_query = Query.has("queue").as_(Queue).also.has("platform").as_(Platform)
+    _validate_get_master_league_query = Query.has("platform").as_(Platform)
 
     _validate_get_league_entries_list_query = (
-        Query.has("queue")
-        .as_(Queue)
-        .also.has("tier")
-        .as_(Tier)
-        .also.has("division")
-        .as_(Division)
-        .also.has("platform")
-        .as_(Platform)
+        Query.has("tier").as_(Tier).also.has("division").as_(Division).also.has("platform").as_(Platform)
     )
 
     _validate_get_shard_status_query = Query.has("platform").as_(Platform)
@@ -224,7 +210,6 @@ class UnloadedGhostStore(DataSource):
         return LeagueEntries.from_generator(
             generator=generate_entries(original_query),
             region=query["region"],
-            queue=query["queue"],
             tier=query["tier"],
             division=query["division"],
         )
