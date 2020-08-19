@@ -1,4 +1,5 @@
 [![MIT Licensed](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/crimack/lissandra/blob/master/LICENSE.txt)
+[![Build Status](https://github.com/Crimack/lissandra/workflows/Build/badge.svg)](https://github.com/Crimack/lissandra/actions?query=workflow%3ABuild)
 
 # Lissandra
 

@@ -1,4 +1,4 @@
-name: Lissandra
+name: Build
 
 on: [push]
 
