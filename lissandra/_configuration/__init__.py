@@ -34,4 +34,4 @@ class LissandraConfiguration(object, metaclass=MetaConfiguration):
 
 import sys
 
-sys.modules["cassiopeia.configuration"] = LissandraConfiguration()
+sys.modules["lissandra.configuration"] = LissandraConfiguration()
