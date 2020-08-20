@@ -191,3 +191,9 @@ class TFTSummoner(CassiopeiaGhost):
     @ghost_load_on
     def revision_date(self) -> datetime.datetime:
         return arrow.get(self._data[TFTSummonerData].revisionDate / 1000)
+
+    @property
+    def league_entries(self):
+        from .league import LeagueSummonerEntries
+
+        return LeagueSummonerEntries(summoner=self)

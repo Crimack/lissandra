@@ -54,23 +54,23 @@ class TestLeague(BaseTest):
         self.assertIsNotNone(entry.league_points)
         self.assertIsNotNone(entry.inactive)
 
-    # @patch("sys.stdout", new_callable=io.StringIO)
-    # def test_get_id_no_call_to_league(self, patched_log):
-    #     s = lissandra.Summoner(name=SUMMONER_NAME)
-    #     s.league_entries[0].league.id
-    #     full_http_call_log = patched_log.getvalue()
-    #     log_lines = full_http_call_log.splitlines()
+    @patch("sys.stdout", new_callable=io.StringIO)
+    def test_get_id_no_call_to_league(self, patched_log):
+        s = lissandra.TFTSummoner(name="Poltsc2", region="NA")
+        s.league_entries[0].league.id
+        full_http_call_log = patched_log.getvalue()
+        log_lines = full_http_call_log.splitlines()
 
-    #     # check that there were 2 http calls: one to get summoner and one to get league entries
-    #     self.assertEqual(len(log_lines), 2)
-    #     get_summoner_call = log_lines[0]
-    #     get_league_entries_call = log_lines[1]
+        # check that there were 2 http calls: one to get summoner and one to get league entries
+        self.assertEqual(len(log_lines), 2)
+        get_summoner_call = log_lines[0]
+        get_league_entries_call = log_lines[1]
 
-    #     self.assertTrue("summoner/v4/summoners/by-name" in get_summoner_call)
-    #     self.assertTrue("league/v4/entries/by-summoner" in get_league_entries_call)
+        self.assertTrue("tft/summoner/v1/summoners/by-name" in get_summoner_call)
+        self.assertTrue("tft/league/v1/entries/by-summoner" in get_league_entries_call)
 
-    #     # check that league endpoint wasn't called to get id
-    #     self.assertFalse("league/v4/leagues" in full_http_call_log)
+        # check that league endpoint wasn't called to get id
+        self.assertFalse("tft/league/v1/leagues" in full_http_call_log)
 
     def assert_league_properties(self, lg: League):
         self.assertEqual(lg.region, Region.europe_west)

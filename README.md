@@ -14,7 +14,7 @@ Lissandra is a fork of Cassiopeia, a wrapper for the main League of Legends API.
 - [x] Fork from Cassiopeia and rewrite the history
 - [x] Support the summoner API
 - [x] Support the leagues API
-- [ ] Join summoner API to league (mr_wiggles = TFTSummoner(), mr_wiggles.league) type stuff
+- [x] Join summoner API to league (mr_wiggles = TFTSummoner(), mr_wiggles.league) type stuff
 - [ ] Write a Cdragon data provider (DDragon has no static data for TFT)
 - [ ] Model TFT items/stats
 - [ ] Support the match history API
