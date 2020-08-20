@@ -17,7 +17,7 @@ from .core import (
     ProfileIcons,
     Realms,
     ShardStatus,
-    TFTSummoner,
+    Summoner,
     VerificationString,
 )
 from .data import Division, GameType, Platform, Queue, Rank, Region, Resource, Tier
@@ -35,7 +35,7 @@ from .lissandra import (
     get_profile_icons,
     get_realms,
     get_status,
-    get_tft_summoner,
+    get_summoner,
     get_verification_string,
     get_version,
     get_versions,

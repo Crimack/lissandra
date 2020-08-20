@@ -4,7 +4,7 @@ import datetime
 
 from .data import Region, Queue, Tier, Division
 from .core import (
-    TFTSummoner,
+    Summoner,
     Realms,
     ProfileIcon,
     LanguageStrings,
@@ -68,7 +68,7 @@ def print_calls(calls: bool, api_key: bool = False):
 # Data endpoints
 
 
-def get_league_entries(summoner: TFTSummoner) -> LeagueEntries:
+def get_league_entries(summoner: Summoner) -> LeagueEntries:
     return summoner.league_entries
 
 
@@ -92,10 +92,10 @@ def get_challenger_league(region: Union[Region, str] = None) -> ChallengerLeague
     return ChallengerLeague(region=region)
 
 
-def get_tft_summoner(
+def get_summoner(
     *, id: str = None, account_id: str = None, name: str = None, region: Union[Region, str] = None
-) -> TFTSummoner:
-    return TFTSummoner(id=id, account_id=account_id, name=name, region=region)
+) -> Summoner:
+    return Summoner(id=id, account_id=account_id, name=name, region=region)
 
 
 def get_profile_icons(region: Union[Region, str] = None) -> ProfileIcons:
@@ -134,7 +134,7 @@ def get_version(date: datetime.date = None, region: Union[Region, str] = None) -
     return None
 
 
-def get_verification_string(summoner: TFTSummoner) -> VerificationString:
+def get_verification_string(summoner: Summoner) -> VerificationString:
     return VerificationString(summoner=summoner)
 
 

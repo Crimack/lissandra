@@ -10,7 +10,7 @@ from ..core.staticdata.profileicon import ProfileIconData, ProfileIconListData, 
 from ..core.staticdata.language import LanguagesData, Locales
 from ..core.staticdata.languagestrings import LanguageStringsData, LanguageStrings
 from ..core.staticdata.version import VersionListData, Versions
-from ..core.tft_summoner import TFTSummonerData, TFTSummoner
+from ..core.summoner import SummonerData, Summoner
 from ..core.status import ShardStatusData, ShardStatus
 
 T = TypeVar("T")
@@ -23,7 +23,7 @@ default_expirations = {
     Locales: datetime.timedelta(days=20),
     LanguageStrings: datetime.timedelta(days=20),
     ProfileIcons: datetime.timedelta(days=20),
-    TFTSummoner: datetime.timedelta(days=1),
+    Summoner: datetime.timedelta(days=1),
 }
 
 
@@ -293,34 +293,34 @@ class Cache(DataSource, DataSink):
             raise NotFoundError
 
     ###################
-    # TFTSummoner API #
+    # Summoner API #
     ###################
 
-    @get.register(TFTSummoner)
-    @validate_query(uniquekeys.validate_tft_summoner_query, uniquekeys.convert_region_to_platform)
-    def get_tft_summoner(self, query: Mapping[str, Any], context: PipelineContext = None) -> TFTSummoner:
-        return self._get(TFTSummoner, query, uniquekeys.for_tft_summoner_query, context)
+    @get.register(Summoner)
+    @validate_query(uniquekeys.validate_summoner_query, uniquekeys.convert_region_to_platform)
+    def get_summoner(self, query: Mapping[str, Any], context: PipelineContext = None) -> Summoner:
+        return self._get(Summoner, query, uniquekeys.for_summoner_query, context)
 
-    @get_many.register(TFTSummoner)
-    @validate_query(uniquekeys.validate_many_tft_summoner_query, uniquekeys.convert_region_to_platform)
-    def get_many_tft_summoner(
+    @get_many.register(Summoner)
+    @validate_query(uniquekeys.validate_many_summoner_query, uniquekeys.convert_region_to_platform)
+    def get_many_summoner(
         self, query: Mapping[str, Any], context: PipelineContext = None
-    ) -> Generator[TFTSummoner, None, None]:
-        return self._get_many(TFTSummoner, query, uniquekeys.for_many_tft_summoner_query, context)
+    ) -> Generator[Summoner, None, None]:
+        return self._get_many(Summoner, query, uniquekeys.for_many_summoner_query, context)
 
-    @put.register(TFTSummoner)
-    def put_tft_summoner(self, item: TFTSummoner, context: PipelineContext = None) -> None:
-        self._put(TFTSummoner, item, uniquekeys.for_tft_summoner, context=context)
+    @put.register(Summoner)
+    def put_summoner(self, item: Summoner, context: PipelineContext = None) -> None:
+        self._put(Summoner, item, uniquekeys.for_summoner, context=context)
 
-    @put_many.register(TFTSummoner)
-    def put_many_tft_summoner(self, items: Iterable[TFTSummoner], context: PipelineContext = None) -> None:
-        self._put_many(TFTSummoner, items, uniquekeys.for_tft_summoner, context=context)
+    @put_many.register(Summoner)
+    def put_many_summoner(self, items: Iterable[Summoner], context: PipelineContext = None) -> None:
+        self._put_many(Summoner, items, uniquekeys.for_summoner, context=context)
 
-    @get.register(TFTSummonerData)
-    @validate_query(uniquekeys.validate_tft_summoner_query, uniquekeys.convert_region_to_platform)
-    def get_tft_summoner_data(self, query: Mapping[str, Any], context: PipelineContext = None) -> TFTSummonerData:
-        result = self.get_tft_summoner(query=query, context=context)
-        if result._data[TFTSummonerData] is not None and result._Ghost__is_loaded(TFTSummonerData):
-            return result._data[TFTSummonerData]
+    @get.register(SummonerData)
+    @validate_query(uniquekeys.validate_summoner_query, uniquekeys.convert_region_to_platform)
+    def get_summoner_data(self, query: Mapping[str, Any], context: PipelineContext = None) -> SummonerData:
+        result = self.get_summoner(query=query, context=context)
+        if result._data[SummonerData] is not None and result._Ghost__is_loaded(SummonerData):
+            return result._data[SummonerData]
         else:
             raise NotFoundError

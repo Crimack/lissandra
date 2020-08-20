@@ -19,7 +19,7 @@ from ..core import (
     Versions,
     LeagueEntries,
     VerificationString,
-    TFTSummoner,
+    Summoner,
 )
 from ..core.league import (
     LeagueEntry,
@@ -106,7 +106,7 @@ class UnloadedGhostStore(DataSource):
 
     _validate_get_shard_status_query = Query.has("platform").as_(Platform)
 
-    _validate_get_tft_summoner_query = (
+    _validate_get_summoner_query = (
         Query.has("id")
         .as_(str)
         .or_("accountId")
@@ -139,14 +139,14 @@ class UnloadedGhostStore(DataSource):
         query["region"] = query.pop("platform").region
         return LanguageStrings._construct_normally(**query)
 
-    @get.register(TFTSummoner)
-    @validate_query(_validate_get_tft_summoner_query, convert_region_to_platform)
-    def get_tft_summoner(self, query: MutableMapping[str, Any], context: PipelineContext = None) -> TFTSummoner:
+    @get.register(Summoner)
+    @validate_query(_validate_get_summoner_query, convert_region_to_platform)
+    def get_summoner(self, query: MutableMapping[str, Any], context: PipelineContext = None) -> Summoner:
         kwargs = copy.deepcopy(query)
         kwargs["region"] = kwargs.pop("platform").region
         if "accountId" in kwargs:
             kwargs["account_id"] = kwargs.pop("accountId")
-        return TFTSummoner._construct_normally(**kwargs)
+        return Summoner._construct_normally(**kwargs)
 
     @get.register(ShardStatus)
     @validate_query(_validate_get_shard_status_query, convert_region_to_platform)
@@ -225,7 +225,7 @@ class UnloadedGhostStore(DataSource):
                 entry = LeagueEntry.from_data(entry)
                 yield entry
 
-        kwargs = {"summoner": TFTSummoner(id=query["summoner.id"], region=query["region"])}
+        kwargs = {"summoner": Summoner(id=query["summoner.id"], region=query["region"])}
         return LeagueSummonerEntries.from_generator(generator=league_summoner_entries_generator(query), **kwargs)
 
     @get.register(VerificationString)
@@ -234,7 +234,7 @@ class UnloadedGhostStore(DataSource):
         self, query: MutableMapping[str, Any], context: PipelineContext = None
     ) -> VerificationString:
         query["region"] = query.pop("platform").region
-        query["summoner"] = TFTSummoner(id=query.pop("summoner.id"), region=query["region"])
+        query["summoner"] = Summoner(id=query.pop("summoner.id"), region=query["region"])
         return VerificationString._construct_normally(**query)
 
     @get.register(ProfileIcons)

@@ -1,5 +1,5 @@
 from .common import DtoObject
 
 
-class TFTSummonerDto(DtoObject):
+class SummonerDto(DtoObject):
     pass

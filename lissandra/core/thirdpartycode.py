@@ -4,7 +4,7 @@ from merakicommons.cache import lazy_property
 
 from ..data import Region, Platform
 from .common import CoreData, CassiopeiaGhost, provide_default_region, ghost_load_on
-from .tft_summoner import TFTSummoner
+from .summoner import Summoner
 
 
 ##############
@@ -25,7 +25,7 @@ class VerificationString(CassiopeiaGhost):
     _data_types = {VerificationStringData}
 
     @provide_default_region
-    def __init__(self, summoner: TFTSummoner, region: Union[Region, str]):
+    def __init__(self, summoner: Summoner, region: Union[Region, str]):
         self.__summoner = summoner
         kwargs = {"region": region}
         super().__init__(**kwargs)
@@ -35,7 +35,7 @@ class VerificationString(CassiopeiaGhost):
 
     @classmethod
     @provide_default_region
-    def __get_query_from_kwargs__(cls, *, summoner: TFTSummoner, region: Union[Region, str]) -> dict:
+    def __get_query_from_kwargs__(cls, *, summoner: Summoner, region: Union[Region, str]) -> dict:
         return {"region": region, "summoner.id": summoner.id}
 
     @lazy_property

@@ -4,7 +4,7 @@ from .staticdata import StaticDataTransformer
 from .status import StatusTransformer
 from .leagues import LeagueTransformer
 from .thirdpartycode import ThirdPartyCodeTransformer
-from .tft_summoner import TFTSummonerTransformer
+from .summoner import SummonerTransformer
 
 
 riotapi_transformer = CompositeDataTransformer(
@@ -13,7 +13,7 @@ riotapi_transformer = CompositeDataTransformer(
         StatusTransformer(),
         LeagueTransformer(),
         ThirdPartyCodeTransformer(),
-        TFTSummonerTransformer(),
+        SummonerTransformer(),
     ]
 )
 

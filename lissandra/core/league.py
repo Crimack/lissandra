@@ -24,7 +24,7 @@ from ..dto.league import (
     ChallengerLeagueListDto,
     MasterLeagueListDto,
 )
-from .tft_summoner import TFTSummoner
+from .summoner import Summoner
 
 
 ##############
@@ -155,7 +155,7 @@ class MiniSeries(CassiopeiaObject):
         str: ["division", "name", "summoner"],
         bool: ["hot_streak", "veteran", "fresh_blood"],
         Division: ["division"],
-        TFTSummoner: ["summoner"],
+        Summoner: ["summoner"],
     }
 )
 class LeagueEntry(CassiopeiaGhost):
@@ -230,8 +230,8 @@ class LeagueEntry(CassiopeiaGhost):
         return self._data[LeagueEntryData].losses
 
     @lazy_property
-    def summoner(self) -> TFTSummoner:
-        return TFTSummoner(
+    def summoner(self) -> Summoner:
+        return Summoner(
             id=self._data[LeagueEntryData].summonerId, name=self._data[LeagueEntryData].summonerName, region=self.region
         )
 
@@ -304,19 +304,19 @@ class LeagueEntries(CassiopeiaLazyList):  # type List[LeagueEntry]
 class LeagueSummonerEntries(CassiopeiaLazyList):
     _data_types = {LeagueSummonerEntriesData}
 
-    def __init__(self, *, summoner: TFTSummoner):
+    def __init__(self, *, summoner: Summoner):
         self.__summoner = summoner
         kwargs = {"region": summoner.region}
         CassiopeiaObject.__init__(self, **kwargs)
 
     @classmethod
-    def __get_query_from_kwargs__(cls, *, summoner: Union[TFTSummoner, str]) -> dict:
+    def __get_query_from_kwargs__(cls, *, summoner: Union[Summoner, str]) -> dict:
         query = {"region": summoner.region}
-        if isinstance(summoner, TFTSummoner):
+        if isinstance(summoner, Summoner):
             query["summoner.id"] = summoner.id
         elif isinstance(summoner, str):
             if len(summoner) < 35:
-                query["summoner.id"] = TFTSummoner(name=summoner, region=summoner.region).id
+                query["summoner.id"] = Summoner(name=summoner, region=summoner.region).id
             else:
                 query["summoner.id"] = summoner
         assert "summoner.id" in query

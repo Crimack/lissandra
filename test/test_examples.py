@@ -5,7 +5,7 @@ import unittest
 
 import lissandra as liss
 from lissandra import (
-    TFTSummoner,
+    Summoner,
     LanguageStrings,
     Locales,
     ShardStatus,
@@ -43,7 +43,7 @@ class TestLeague(BaseTest):
         profile_icons[10].name
 
     def test_readme(self):
-        summoner = liss.get_tft_summoner(name="Crimack", region="EUW")
+        summoner = liss.get_summoner(name="Crimack", region="EUW")
         "{name} is a level {level} summoner on the {region} server.".format(
             name=summoner.name, level=summoner.level, region=summoner.region
         )
@@ -53,10 +53,10 @@ class TestLeague(BaseTest):
         status = ShardStatus(region="EUW")
         self.assertIsNotNone(status.name)
 
-    def test_tft_summoner(self):
+    def test_summoner(self):
         name = "Crimack"
         region = "EUW"
-        summoner = TFTSummoner(name=name, region=region)
+        summoner = Summoner(name=name, region=region)
         "Name:", summoner.name
         "ID:", summoner.id
         "Account ID:", summoner.account_id

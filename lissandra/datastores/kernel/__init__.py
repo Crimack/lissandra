@@ -15,7 +15,7 @@ def _default_services(server_url: str, port: int) -> Set[KernelSource]:
     from .status import StatusAPI
     from .leagues import LeaguesAPI
     from .thirdpartycode import ThirdPartyCodeAPI
-    from .tft_summoner import TFTSummonerAPI
+    from .summoner import SummonerAPI
 
     client = HTTPClient()
     services = {
@@ -28,7 +28,7 @@ def _default_services(server_url: str, port: int) -> Set[KernelSource]:
         StatusAPI(server_url=server_url, port=port, http_client=client),
         LeaguesAPI(server_url=server_url, port=port, http_client=client),
         ThirdPartyCodeAPI(server_url=server_url, port=port, http_client=client),
-        TFTSummonerAPI(server_url=server_url, port=port, http_client=client),
+        SummonerAPI(server_url=server_url, port=port, http_client=client),
     }
 
     return services

@@ -13,7 +13,7 @@ def _default_services(
     from .status import StatusAPI
     from .leagues import LeaguesAPI
     from .thirdpartycode import ThirdPartyCodeAPI
-    from .tft_summoner import TFTSummonerAPI
+    from .summoner import SummonerAPI
     from ...data import Platform
 
     app_rate_limiter = {platform: RiotAPIRateLimiter(limiting_share=limiting_share) for platform in Platform}
@@ -39,7 +39,7 @@ def _default_services(
             request_error_handling=request_error_handling,
             http_client=client,
         ),
-        TFTSummonerAPI(
+        SummonerAPI(
             api_key,
             app_rate_limiter=app_rate_limiter,
             request_error_handling=request_error_handling,

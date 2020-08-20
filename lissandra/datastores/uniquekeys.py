@@ -14,7 +14,7 @@ from ..dto.staticdata import (
     VersionListDto,
 )
 from ..dto.status import ShardStatusDto
-from ..dto.tft_summoner import TFTSummonerDto
+from ..dto.summoner import SummonerDto
 
 from ..core.league import (
     LeagueSummonerEntries,
@@ -33,7 +33,7 @@ from ..core.staticdata import (
     Versions,
 )
 from ..core.status import ShardStatus
-from ..core.tft_summoner import TFTSummoner, TFTSummonerData
+from ..core.summoner import Summoner, SummonerData
 
 from .util import (
     get_default_locale,
@@ -72,16 +72,14 @@ def for_league_entries_dto_query(query: Query) -> Tuple[str, str, int, int]:
     return query["platform"].value, query["tier"].value, query["id"], query["page"]
 
 
-validate_league_tft_summoner_entries_dto_query = (
-    Query.has("platform").as_(Platform).also.has("id").as_(int)
-)  # TFTSummoner ID
+validate_league_summoner_entries_dto_query = Query.has("platform").as_(Platform).also.has("id").as_(int)  # Summoner ID
 
 
-def for_league_tft_summoner_entries_dto(league_entries: LeagueEntriesDto) -> Tuple[str, int]:
+def for_league_summoner_entries_dto(league_entries: LeagueEntriesDto) -> Tuple[str, int]:
     return league_entries["platform"], league_entries["id"]
 
 
-def for_league_tft_summoner_entries_dto_query(query: Query) -> Tuple[str, int]:
+def for_league_summoner_entries_dto_query(query: Query) -> Tuple[str, int]:
     return query["platform"].value, query["id"]
 
 
@@ -288,16 +286,16 @@ def for_many_shard_status_dto_query(query: Query) -> Generator[str, None, None]:
 
 
 ###################
-# TFTSummoner API #
+# Summoner API #
 ###################
 
 
-validate_tft_summoner_dto_query = (
+validate_summoner_dto_query = (
     Query.has("platform").as_(Platform).also.has("id").as_(int).or_("accountId").as_(int).or_("name").as_(str)
 )
 
 
-validate_many_tft_summoner_dto_query = (
+validate_many_summoner_dto_query = (
     Query.has("platform")
     .as_(Platform)
     .also.has("ids")
@@ -309,11 +307,11 @@ validate_many_tft_summoner_dto_query = (
 )
 
 
-def for_tft_summoner_dto(summoner: TFTSummonerDto, identifier: str = "id") -> Tuple[str, Union[int, str]]:
+def for_summoner_dto(summoner: SummonerDto, identifier: str = "id") -> Tuple[str, Union[int, str]]:
     return summoner["platform"], summoner[identifier]
 
 
-def for_tft_summoner_dto_query(query: Query) -> Tuple[str, Union[int, str]]:
+def for_summoner_dto_query(query: Query) -> Tuple[str, Union[int, str]]:
     if "id" in query:
         identifier = "id"
     elif "accountId" in query:
@@ -323,7 +321,7 @@ def for_tft_summoner_dto_query(query: Query) -> Tuple[str, Union[int, str]]:
     return query["platform"].value, query[identifier]
 
 
-def for_many_tft_summoner_dto_query(query: Query) -> Generator[Tuple[str, Union[int, str]], None, None]:
+def for_many_summoner_dto_query(query: Query) -> Generator[Tuple[str, Union[int, str]], None, None]:
     if "ids" in query:
         identifiers, identifier_type = query["ids"], int
     elif "accountIds" in query:
@@ -357,7 +355,7 @@ validate_many_league_entries_query = Query.has("platform").as_(Platform).also.ha
 
 
 def for_league_summoner_entries(entries: LeagueSummonerEntries) -> List[Tuple[str, str]]:
-    return [(entries.platform.value, entries._LeagueSummonerEntries__tft_summoner.id)]
+    return [(entries.platform.value, entries._LeagueSummonerEntries__summoner.id)]
 
 
 def for_league_summoner_entries_query(query: Query) -> List[Tuple[str, str]]:
@@ -649,11 +647,11 @@ def for_many_shard_status_query(query: Query) -> Generator[List[str], None, None
 
 
 ################
-# TFTSummoner API #
+# Summoner API #
 ################
 
 
-validate_tft_summoner_query = (
+validate_summoner_query = (
     Query.has("platform")
     .as_(Platform)
     .also.has("id")
@@ -667,7 +665,7 @@ validate_tft_summoner_query = (
 )
 
 
-validate_many_tft_summoner_query = (
+validate_many_summoner_query = (
     Query.has("platform")
     .as_(Platform)
     .also.has("ids")
@@ -681,28 +679,28 @@ validate_many_tft_summoner_query = (
 )
 
 
-def for_tft_summoner(summoner: TFTSummoner) -> List[Tuple]:
+def for_summoner(summoner: Summoner) -> List[Tuple]:
     keys = []
     try:
-        keys.append((summoner.platform.value, "id", summoner._data[TFTSummonerData].id))
+        keys.append((summoner.platform.value, "id", summoner._data[SummonerData].id))
     except AttributeError:
         pass
     try:
-        keys.append((summoner.platform.value, "name", summoner._data[TFTSummonerData].name))
+        keys.append((summoner.platform.value, "name", summoner._data[SummonerData].name))
     except AttributeError:
         pass
     try:
-        keys.append((summoner.platform.value, "accountId", summoner._data[TFTSummonerData].accountId))
+        keys.append((summoner.platform.value, "accountId", summoner._data[SummonerData].accountId))
     except AttributeError:
         pass
     try:
-        keys.append((summoner.platform.value, "puuid", summoner._data[TFTSummonerData].puuid))
+        keys.append((summoner.platform.value, "puuid", summoner._data[SummonerData].puuid))
     except AttributeError:
         pass
     return keys
 
 
-def for_tft_summoner_query(query: Query) -> List[Tuple]:
+def for_summoner_query(query: Query) -> List[Tuple]:
     keys = []
     if "id" in query:
         keys.append((query["platform"].value, "id", query["id"]))
@@ -715,7 +713,7 @@ def for_tft_summoner_query(query: Query) -> List[Tuple]:
     return keys
 
 
-def for_many_tft_summoner_query(query: Query) -> Generator[List[Tuple], None, None]:
+def for_many_summoner_query(query: Query) -> Generator[List[Tuple], None, None]:
     grouped_identifiers = []
     identifier_types = []
     if "ids" in query:

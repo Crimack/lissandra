@@ -2,6 +2,12 @@ from enum import Enum
 import arrow
 
 
+class RoutingRegion(Enum):
+    americas = "AMERICAS"
+    asia = "ASIA"
+    europe = "EUROPE"
+
+
 class Region(Enum):
     brazil = "BR"
     europe_north_east = "EUNE"
@@ -22,6 +28,10 @@ class Region(Enum):
     @property
     def default_locale(self) -> str:
         return DEFAULT_LOCALE[self]
+
+    @property
+    def routing_region(self) -> RoutingRegion:
+        return ROUTING_REGIONS[self]
 
     @staticmethod
     def from_platform(platform):
@@ -69,6 +79,10 @@ class Platform(Enum):
     def default_locale(self) -> str:
         return DEFAULT_LOCALE[self]
 
+    @property
+    def routing_region(self) -> RoutingRegion:
+        return ROUTING_REGIONS[self]
+
     @staticmethod
     def from_region(region):
         try:
@@ -100,6 +114,31 @@ DEFAULT_LOCALE = {
     Platform.turkey: "tr_TR",
     Region.russia: "ru_RU",
     Platform.russia: "ru_RU",
+}
+
+ROUTING_REGIONS = {
+    Region.brazil: RoutingRegion.americas,
+    Platform.brazil: RoutingRegion.americas,
+    Region.europe_north_east: RoutingRegion.europe,
+    Platform.europe_north_east: RoutingRegion.europe,
+    Region.europe_west: RoutingRegion.europe,
+    Platform.europe_west: RoutingRegion.europe,
+    Region.japan: RoutingRegion.asia,
+    Platform.japan: RoutingRegion.asia,
+    Region.korea: RoutingRegion.asia,
+    Platform.korea: RoutingRegion.asia,
+    Region.latin_america_north: RoutingRegion.americas,
+    Platform.latin_america_north: RoutingRegion.americas,
+    Region.latin_america_south: RoutingRegion.americas,
+    Platform.latin_america_south: RoutingRegion.americas,
+    Region.north_america: RoutingRegion.americas,
+    Platform.north_america: RoutingRegion.americas,
+    Region.oceania: RoutingRegion.americas,
+    Platform.oceania: RoutingRegion.americas,
+    Region.turkey: RoutingRegion.europe,
+    Platform.turkey: RoutingRegion.europe,
+    Region.russia: RoutingRegion.europe,
+    Platform.russia: RoutingRegion.europe,
 }
 
 

@@ -9,7 +9,7 @@ from merakicommons.container import searchable
 from ..data import Region, Platform, Rank
 from .common import CoreData, CassiopeiaObject, CassiopeiaGhost, provide_default_region, ghost_load_on
 from .staticdata import ProfileIcon
-from ..dto.tft_summoner import TFTSummonerDto
+from ..dto.summoner import SummonerDto
 
 
 ##############
@@ -17,8 +17,8 @@ from ..dto.tft_summoner import TFTSummonerDto
 ##############
 
 
-class TFTSummonerData(CoreData):
-    _dto_type = TFTSummonerDto
+class SummonerData(CoreData):
+    _dto_type = SummonerDto
     _renamed = {"summonerLevel": "level"}
 
 
@@ -30,8 +30,8 @@ class TFTSummonerData(CoreData):
 @searchable(
     {str: ["name", "region", "platform", "id", "account_id", "puuid"], Region: ["region"], Platform: ["platform"]}
 )
-class TFTSummoner(CassiopeiaGhost):
-    _data_types = {TFTSummonerData}
+class Summoner(CassiopeiaGhost):
+    _data_types = {SummonerData}
 
     @provide_default_region
     def __init__(
@@ -74,40 +74,40 @@ class TFTSummoner(CassiopeiaGhost):
     def __get_query__(self):
         query = {"region": self.region, "platform": self.platform}
         try:
-            query["puuid"] = self._data[TFTSummonerData].puuid
+            query["puuid"] = self._data[SummonerData].puuid
         except AttributeError:
             pass
         try:
-            query["id"] = self._data[TFTSummonerData].id
+            query["id"] = self._data[SummonerData].id
         except AttributeError:
             pass
         try:
-            query["accountId"] = self._data[TFTSummonerData].accountId
+            query["accountId"] = self._data[SummonerData].accountId
         except AttributeError:
             pass
         try:
-            query["name"] = self._data[TFTSummonerData].name
+            query["name"] = self._data[SummonerData].name
         except AttributeError:
             pass
         assert "id" in query or "name" in query or "accountId" in query or "puuid" in query
         return query
 
-    def __eq__(self, other: "TFTSummoner"):
-        if not isinstance(other, TFTSummoner) or self.region != other.region:
+    def __eq__(self, other: "Summoner"):
+        if not isinstance(other, Summoner) or self.region != other.region:
             return False
         s = {}
         o = {}
-        if hasattr(self._data[TFTSummonerData], "id"):
+        if hasattr(self._data[SummonerData], "id"):
             s["id"] = self.id
-        if hasattr(other._data[TFTSummonerData], "id"):
+        if hasattr(other._data[SummonerData], "id"):
             o["id"] = other.id
-        if hasattr(self._data[TFTSummonerData], "name"):
+        if hasattr(self._data[SummonerData], "name"):
             s["name"] = self.sanitized_name
-        if hasattr(other._data[TFTSummonerData], "name"):
+        if hasattr(other._data[SummonerData], "name"):
             o["name"] = other.sanitized_name
-        if hasattr(self._data[TFTSummonerData], "accountId"):
+        if hasattr(self._data[SummonerData], "accountId"):
             s["accountId"] = self.account_id
-        if hasattr(other._data[TFTSummonerData], "accountId"):
+        if hasattr(other._data[SummonerData], "accountId"):
             o["accountId"] = other.account_id
         if any(s.get(key, "s") == o.get(key, "o") for key in s):
             return True
@@ -117,19 +117,19 @@ class TFTSummoner(CassiopeiaGhost):
     def __str__(self):
         id_ = "?"
         name = "?"
-        if hasattr(self._data[TFTSummonerData], "id"):
+        if hasattr(self._data[SummonerData], "id"):
             id_ = self.id
-        if hasattr(self._data[TFTSummonerData], "name"):
+        if hasattr(self._data[SummonerData], "name"):
             name = self.name
         try:
-            account_id = self._data[TFTSummonerData].accountId
+            account_id = self._data[SummonerData].accountId
         except AttributeError:
             account_id = "?"
         try:
-            puuid = self._data[TFTSummonerData].puuid
+            puuid = self._data[SummonerData].puuid
         except AttributeError:
             puuid = "?"
-        return "TFTSummoner(id={id_}, account_id={account_id}, name='{name}', puuid='{puuid}')".format(
+        return "Summoner(id={id_}, account_id={account_id}, name='{name}', puuid='{puuid}')".format(
             id_=id_, name=name, account_id=account_id, puuid=puuid
         )
 
@@ -146,51 +146,51 @@ class TFTSummoner(CassiopeiaGhost):
     @lazy_property
     def region(self) -> Region:
         """The region for this summoner."""
-        return Region(self._data[TFTSummonerData].region)
+        return Region(self._data[SummonerData].region)
 
     @lazy_property
     def platform(self) -> Platform:
         """The platform for this summoner."""
         return self.region.platform
 
-    @CassiopeiaGhost.property(TFTSummonerData)
+    @CassiopeiaGhost.property(SummonerData)
     @ghost_load_on
     def account_id(self) -> str:
-        return self._data[TFTSummonerData].accountId
+        return self._data[SummonerData].accountId
 
-    @CassiopeiaGhost.property(TFTSummonerData)
+    @CassiopeiaGhost.property(SummonerData)
     @ghost_load_on
     def puuid(self) -> str:
-        return self._data[TFTSummonerData].puuid
+        return self._data[SummonerData].puuid
 
-    @CassiopeiaGhost.property(TFTSummonerData)
+    @CassiopeiaGhost.property(SummonerData)
     @ghost_load_on
     def id(self) -> str:
-        return self._data[TFTSummonerData].id
+        return self._data[SummonerData].id
 
-    @CassiopeiaGhost.property(TFTSummonerData)
+    @CassiopeiaGhost.property(SummonerData)
     @ghost_load_on
     def name(self) -> str:
-        return self._data[TFTSummonerData].name
+        return self._data[SummonerData].name
 
     @property
     def sanitized_name(self) -> str:
         return self.name.replace(" ", "").lower()
 
-    @CassiopeiaGhost.property(TFTSummonerData)
+    @CassiopeiaGhost.property(SummonerData)
     @ghost_load_on
     def level(self) -> str:
-        return self._data[TFTSummonerData].level
+        return self._data[SummonerData].level
 
-    @CassiopeiaGhost.property(TFTSummonerData)
+    @CassiopeiaGhost.property(SummonerData)
     @ghost_load_on
     def profile_icon(self) -> ProfileIcon:
-        return ProfileIcon(id=self._data[TFTSummonerData].profileIconId, region=self.region)
+        return ProfileIcon(id=self._data[SummonerData].profileIconId, region=self.region)
 
-    @CassiopeiaGhost.property(TFTSummonerData)
+    @CassiopeiaGhost.property(SummonerData)
     @ghost_load_on
     def revision_date(self) -> datetime.datetime:
-        return arrow.get(self._data[TFTSummonerData].revisionDate / 1000)
+        return arrow.get(self._data[SummonerData].revisionDate / 1000)
 
     @property
     def league_entries(self):

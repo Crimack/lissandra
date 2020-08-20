@@ -7,9 +7,9 @@ from .constants import SUMMONER_NAME, UNKNOWN_SUMMONER_NAME
 from .test_util import BaseTest
 
 
-class TestTFTSummoner(BaseTest):
+class TestSummoner(BaseTest):
     def test_access_properties(self):
-        s = lissandra.TFTSummoner(name=SUMMONER_NAME)
+        s = lissandra.Summoner(name=SUMMONER_NAME)
         self.assertIsNotNone(s.region)
         self.assertIsNotNone(s.platform)
         self.assertIsNotNone(s.account_id)
@@ -22,8 +22,8 @@ class TestTFTSummoner(BaseTest):
         self.assertIsNotNone(s.revision_date)
 
     def test_equality(self):
-        from_name = lissandra.get_tft_summoner(name=SUMMONER_NAME, region="EUW")
-        from_id = lissandra.get_tft_summoner(id=from_name.id, region="EUW")
+        from_name = lissandra.get_summoner(name=SUMMONER_NAME, region="EUW")
+        from_id = lissandra.get_summoner(id=from_name.id, region="EUW")
         self.assertEqual(from_name.id, from_id.id)
         self.assertEqual(from_name.name, from_id.name)
         self.assertEqual(from_name, from_id)

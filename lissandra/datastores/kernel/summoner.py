@@ -36,13 +36,13 @@ class SummonerAPI(KernelSource):
     def get_summoner(self, query: MutableMapping[str, Any], context: PipelineContext = None) -> SummonerDto:
         parameters = {"platform": query["platform"].value}
         if "id" in query:
-            endpoint = "lol/summoner/v4/summoners/{summonerId}".format(summonerId=query["id"])
+            endpoint = "tft/summoner/v1/summoners/{summonerId}".format(summonerId=query["id"])
         elif "accountId" in query:
-            endpoint = "lol/summoner/v4/summoners/by-account/{accountId}".format(accountId=query["accountId"])
+            endpoint = "tft/summoner/v1/summoners/by-account/{accountId}".format(accountId=query["accountId"])
         elif "name" in query:
-            endpoint = "lol/summoner/v4/summoners/by-name/{name}".format(name=query["name"].replace(" ", ""))
+            endpoint = "tft/summoner/v1/summoners/by-name/{name}".format(name=query["name"].replace(" ", ""))
         elif "puuid" in query:
-            endpoint = "lol/summoner/v4/summoners/by-puuid/{puuid}".format(puuid=query["puuid"])
+            endpoint = "tft/summoner/v1/summoners/by-puuid/{puuid}".format(puuid=query["puuid"])
         else:
             RuntimeError("Impossible")
 

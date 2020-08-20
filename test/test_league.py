@@ -56,7 +56,7 @@ class TestLeague(BaseTest):
 
     @patch("sys.stdout", new_callable=io.StringIO)
     def test_get_id_no_call_to_league(self, patched_log):
-        s = lissandra.TFTSummoner(name="Poltsc2", region="NA")
+        s = lissandra.Summoner(name="Poltsc2", region="NA")
         s.league_entries[0].league.id
         full_http_call_log = patched_log.getvalue()
         log_lines = full_http_call_log.splitlines()

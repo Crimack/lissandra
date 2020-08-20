@@ -3,13 +3,13 @@ from typing import Type, TypeVar, MutableMapping, Any, Iterable
 from datapipelines import DataSource, PipelineContext, Query, NotFoundError, validate_query
 from .common import RiotAPIService, APINotFoundError
 from ...data import Platform
-from ...dto.tft_summoner import TFTSummonerDto
+from ...dto.summoner import SummonerDto
 from ..util import convert_region_to_platform
 
 T = TypeVar("T")
 
 
-class TFTSummonerAPI(RiotAPIService):
+class SummonerAPI(RiotAPIService):
     @DataSource.dispatch
     def get(self, type: Type[T], query: MutableMapping[str, Any], context: PipelineContext = None) -> T:
         pass
@@ -18,7 +18,7 @@ class TFTSummonerAPI(RiotAPIService):
     def get_many(self, type: Type[T], query: MutableMapping[str, Any], context: PipelineContext = None) -> Iterable[T]:
         pass
 
-    _validate_get_tft_summoner_query = (
+    _validate_get_summoner_query = (
         Query.has("id")
         .as_(str)
         .or_("accountId")
@@ -31,9 +31,9 @@ class TFTSummonerAPI(RiotAPIService):
         .as_(Platform)
     )
 
-    @get.register(TFTSummonerDto)
-    @validate_query(_validate_get_tft_summoner_query, convert_region_to_platform)
-    def get_tft_summoner(self, query: MutableMapping[str, Any], context: PipelineContext = None) -> TFTSummonerDto:
+    @get.register(SummonerDto)
+    @validate_query(_validate_get_summoner_query, convert_region_to_platform)
+    def get_summoner(self, query: MutableMapping[str, Any], context: PipelineContext = None) -> SummonerDto:
         if "id" in query:
             url = "https://{platform}.api.riotgames.com/tft/summoner/v1/summoners/{summonerId}".format(
                 platform=query["platform"].value.lower(), summonerId=query["id"]
@@ -64,4 +64,4 @@ class TFTSummonerAPI(RiotAPIService):
             raise NotFoundError(str(error)) from error
 
         data["region"] = query["platform"].region.value
-        return TFTSummonerDto(**data)
+        return SummonerDto(**data)
