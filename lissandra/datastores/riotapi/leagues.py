@@ -44,7 +44,9 @@ class LeaguesAPI(RiotAPIService):
         self, query: MutableMapping[str, Any], context: PipelineContext = None
     ) -> LeagueEntriesDto:
         url = "https://{platform}.api.riotgames.com/tft/league/v1/entries/{tier}/{division}".format(
-            platform=query["platform"].value.lower(), tier=query["tier"].value, division=query["division"].value,
+            platform=query["platform"].value.lower(),
+            tier=query["tier"].value,
+            division=query["division"].value,
         )
         try:
             app_limiter, method_limiter = self._get_rate_limiter(query["platform"], "leagues/paginated-entries")

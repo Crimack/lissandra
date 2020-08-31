@@ -24,11 +24,21 @@ class MerakiAnalyticsCDN(DataSource):
         self._cache = {}
 
     @DataSource.dispatch
-    def get(self, type: Type[T], query: MutableMapping[str, Any], context: PipelineContext = None,) -> T:
+    def get(
+        self,
+        type: Type[T],
+        query: MutableMapping[str, Any],
+        context: PipelineContext = None,
+    ) -> T:
         pass
 
     @DataSource.dispatch
-    def get_many(self, type: Type[T], query: MutableMapping[str, Any], context: PipelineContext = None,) -> Iterable[T]:
+    def get_many(
+        self,
+        type: Type[T],
+        query: MutableMapping[str, Any],
+        context: PipelineContext = None,
+    ) -> Iterable[T]:
         pass
 
     def calculate_hash(self, query):
