@@ -41,6 +41,7 @@ class TestLeague(BaseTest):
     def test_access_league_entry_properties(self):
         entry = lissandra.League(id=LEAGUE_UUID).entries[0]
         self.assertIsNotNone(entry.region)
+        self.assertIsNotNone(entry.queue)
         self.assertIsNotNone(entry.platform)
         self.assertIsNotNone(entry.tier)
         self.assertIsNotNone(entry.division)
@@ -58,6 +59,7 @@ class TestLeague(BaseTest):
     def test_get_id_no_call_to_league(self, patched_log):
         s = lissandra.Summoner(name="Poltsc2", region="NA")
         s.league_entries[0].league.id
+
         full_http_call_log = patched_log.getvalue()
         log_lines = full_http_call_log.splitlines()
 

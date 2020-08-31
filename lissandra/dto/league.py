@@ -1,10 +1,6 @@
 from .common import DtoObject
 
 
-class MiniSeriesDto(DtoObject):
-    pass
-
-
 class LeagueEntryDto(DtoObject):
     pass
 

@@ -1,5 +1,5 @@
 import lissandra as liss
-from lissandra.data import Queue, Position
+from lissandra.data import Queue
 from lissandra.core import Summoner
 
 
@@ -16,7 +16,7 @@ def print_leagues(summoner_name: str, region: str):
     print()
 
     print(f"Listing all summoners in this league:")
-    for position, entry in enumerate(entries.fives.league.entries):
+    for position, entry in enumerate(entries.tft.league.entries):
         print(entry.summoner.name, entry.league_points, entry.tier, entry.division, position)
 
     print()

@@ -54,9 +54,10 @@ from .util import (
 # League API #
 ##############
 
+# League ID
 validate_league_entries_dto_query = (
     Query.has("platform").as_(Platform).also.has("tier").as_(Tier).also.has("page").as_(int).also.has("id").as_(int)
-)  # League ID
+)
 
 
 def for_league_entries_dto(league_entries: LeagueEntriesDto) -> Tuple[str, str, int, int]:

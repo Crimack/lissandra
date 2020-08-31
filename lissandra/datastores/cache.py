@@ -4,12 +4,21 @@ import datetime
 from datapipelines import DataSource, DataSink, PipelineContext, validate_query, NotFoundError
 from merakicommons.cache import Cache as CommonsCache
 
-from . import uniquekeys
+from . import uniquekeys, util
 from ..core.staticdata.realm import RealmData, Realms
 from ..core.staticdata.profileicon import ProfileIconData, ProfileIconListData, ProfileIcon, ProfileIcons
 from ..core.staticdata.language import LanguagesData, Locales
 from ..core.staticdata.languagestrings import LanguageStringsData, LanguageStrings
 from ..core.staticdata.version import VersionListData, Versions
+from ..core.league import (
+    LeagueEntriesData,
+    LeagueEntries,
+    LeagueSummonerEntriesData,
+    LeagueSummonerEntries,
+    ChallengerLeague,
+    MasterLeague,
+    GrandmasterLeague,
+)
 from ..core.summoner import SummonerData, Summoner
 from ..core.status import ShardStatusData, ShardStatus
 
@@ -130,12 +139,12 @@ class Cache(DataSource, DataSink):
     # Language
 
     @get.register(Locales)
-    @validate_query(uniquekeys.validate_languages_query, uniquekeys.convert_region_to_platform)
+    @validate_query(uniquekeys.validate_languages_query, util.convert_region_to_platform)
     def get_languages(self, query: Mapping[str, Any], context: PipelineContext = None) -> Locales:
         return self._get(Locales, query, uniquekeys.for_languages_query, context)
 
     @get_many.register(Locales)
-    @validate_query(uniquekeys.validate_many_languages_query, uniquekeys.convert_region_to_platform)
+    @validate_query(uniquekeys.validate_many_languages_query, util.convert_region_to_platform)
     def get_many_languages(
         self, query: Mapping[str, Any], context: PipelineContext = None
     ) -> Generator[Locales, None, None]:
@@ -152,12 +161,12 @@ class Cache(DataSource, DataSink):
     # Language strings
 
     @get.register(LanguageStrings)
-    @validate_query(uniquekeys.validate_language_strings_query, uniquekeys.convert_region_to_platform)
+    @validate_query(uniquekeys.validate_language_strings_query, util.convert_region_to_platform)
     def get_language_strings(self, query: Mapping[str, Any], context: PipelineContext = None) -> LanguageStrings:
         return self._get(LanguageStrings, query, uniquekeys.for_language_strings_query, context)
 
     @get_many.register(LanguageStrings)
-    @validate_query(uniquekeys.validate_many_language_strings_query, uniquekeys.convert_region_to_platform)
+    @validate_query(uniquekeys.validate_many_language_strings_query, util.convert_region_to_platform)
     def get_many_language_strings(
         self, query: Mapping[str, Any], context: PipelineContext = None
     ) -> Generator[LanguageStrings, None, None]:
@@ -172,7 +181,7 @@ class Cache(DataSource, DataSink):
         self._put_many(LanguageStrings, items, uniquekeys.for_language_strings, context=context)
 
     @get.register(LanguageStringsData)
-    @validate_query(uniquekeys.validate_language_strings_query, uniquekeys.convert_region_to_platform)
+    @validate_query(uniquekeys.validate_language_strings_query, util.convert_region_to_platform)
     def get_language_strings_data(
         self, query: Mapping[str, Any], context: PipelineContext = None
     ) -> LanguageStringsData:
@@ -185,12 +194,12 @@ class Cache(DataSource, DataSink):
     # Profile Icons
 
     @get.register(ProfileIcons)
-    @validate_query(uniquekeys.validate_profile_icons_query, uniquekeys.convert_region_to_platform)
+    @validate_query(uniquekeys.validate_profile_icons_query, util.convert_region_to_platform)
     def get_profile_icons(self, query: Mapping[str, Any], context: PipelineContext = None) -> ProfileIcons:
         return self._get(ProfileIcons, query, uniquekeys.for_profile_icons_query, context)
 
     @get_many.register(ProfileIcons)
-    @validate_query(uniquekeys.validate_many_profile_icons_query, uniquekeys.convert_region_to_platform)
+    @validate_query(uniquekeys.validate_many_profile_icons_query, util.convert_region_to_platform)
     def get_many_profile_icons(
         self, query: Mapping[str, Any], context: PipelineContext = None
     ) -> Generator[ProfileIcons, None, None]:
@@ -209,12 +218,12 @@ class Cache(DataSource, DataSink):
     # Realm
 
     @get.register(Realms)
-    @validate_query(uniquekeys.validate_realms_query, uniquekeys.convert_region_to_platform)
+    @validate_query(uniquekeys.validate_realms_query, util.convert_region_to_platform)
     def get_realms(self, query: Mapping[str, Any], context: PipelineContext = None) -> Realms:
         return self._get(Realms, query, uniquekeys.for_realms_query, context)
 
     @get_many.register(Realms)
-    @validate_query(uniquekeys.validate_many_realms_query, uniquekeys.convert_region_to_platform)
+    @validate_query(uniquekeys.validate_many_realms_query, util.convert_region_to_platform)
     def get_many_realms(
         self, query: Mapping[str, Any], context: PipelineContext = None
     ) -> Generator[Realms, None, None]:
@@ -229,7 +238,7 @@ class Cache(DataSource, DataSink):
         self._put_many(Realms, items, uniquekeys.for_realms, context=context)
 
     @get.register(RealmData)
-    @validate_query(uniquekeys.validate_realms_query, uniquekeys.convert_region_to_platform)
+    @validate_query(uniquekeys.validate_realms_query, util.convert_region_to_platform)
     def get_realms_data(self, query: Mapping[str, Any], context: PipelineContext = None) -> RealmData:
         result = self.get_realms(query=query, context=context)
         if result._data[RealmData] is not None and result._Ghost__is_loaded(RealmData):
@@ -240,12 +249,12 @@ class Cache(DataSource, DataSink):
     # Versions
 
     @get.register(Versions)
-    @validate_query(uniquekeys.validate_versions_query, uniquekeys.convert_region_to_platform)
+    @validate_query(uniquekeys.validate_versions_query, util.convert_region_to_platform)
     def get_versions(self, query: Mapping[str, Any], context: PipelineContext = None) -> Versions:
         return self._get(Versions, query, uniquekeys.for_versions_query, context=context)
 
     @get_many.register(Versions)
-    @validate_query(uniquekeys.validate_many_versions_query, uniquekeys.convert_region_to_platform)
+    @validate_query(uniquekeys.validate_many_versions_query, util.convert_region_to_platform)
     def get_many_versions(
         self, query: Mapping[str, Any], context: PipelineContext = None
     ) -> Generator[Versions, None, None]:
@@ -264,12 +273,12 @@ class Cache(DataSource, DataSink):
     ##############
 
     @get.register(ShardStatus)
-    @validate_query(uniquekeys.validate_shard_status_query, uniquekeys.convert_region_to_platform)
+    @validate_query(uniquekeys.validate_shard_status_query, util.convert_region_to_platform)
     def get_shard_status(self, query: Mapping[str, Any], context: PipelineContext = None) -> ShardStatus:
         return self._get(ShardStatus, query, uniquekeys.for_shard_status_query, context)
 
     @get_many.register(ShardStatus)
-    @validate_query(uniquekeys.validate_many_shard_status_query, uniquekeys.convert_region_to_platform)
+    @validate_query(uniquekeys.validate_many_shard_status_query, util.convert_region_to_platform)
     def get_many_shard_status(
         self, query: Mapping[str, Any], context: PipelineContext = None
     ) -> Generator[ShardStatus, None, None]:
@@ -284,7 +293,7 @@ class Cache(DataSource, DataSink):
         self._put_many(ShardStatus, items, uniquekeys.for_shard_status, context=context)
 
     @get.register(ShardStatusData)
-    @validate_query(uniquekeys.validate_shard_status_query, uniquekeys.convert_region_to_platform)
+    @validate_query(uniquekeys.validate_shard_status_query, util.convert_region_to_platform)
     def get_shard_status_data(self, query: Mapping[str, Any], context: PipelineContext = None) -> ShardStatusData:
         result = self.get_shard_status(query=query, context=context)
         if result._data[ShardStatusData] is not None and result._Ghost__is_loaded(ShardStatusData):
@@ -293,16 +302,16 @@ class Cache(DataSource, DataSink):
             raise NotFoundError
 
     ###################
-    # Summoner API #
+    # Summoner API    #
     ###################
 
     @get.register(Summoner)
-    @validate_query(uniquekeys.validate_summoner_query, uniquekeys.convert_region_to_platform)
+    @validate_query(uniquekeys.validate_summoner_query, util.convert_region_to_platform)
     def get_summoner(self, query: Mapping[str, Any], context: PipelineContext = None) -> Summoner:
         return self._get(Summoner, query, uniquekeys.for_summoner_query, context)
 
     @get_many.register(Summoner)
-    @validate_query(uniquekeys.validate_many_summoner_query, uniquekeys.convert_region_to_platform)
+    @validate_query(uniquekeys.validate_many_summoner_query, util.convert_region_to_platform)
     def get_many_summoner(
         self, query: Mapping[str, Any], context: PipelineContext = None
     ) -> Generator[Summoner, None, None]:
@@ -317,10 +326,85 @@ class Cache(DataSource, DataSink):
         self._put_many(Summoner, items, uniquekeys.for_summoner, context=context)
 
     @get.register(SummonerData)
-    @validate_query(uniquekeys.validate_summoner_query, uniquekeys.convert_region_to_platform)
+    @validate_query(uniquekeys.validate_summoner_query, util.convert_region_to_platform)
     def get_summoner_data(self, query: Mapping[str, Any], context: PipelineContext = None) -> SummonerData:
         result = self.get_summoner(query=query, context=context)
         if result._data[SummonerData] is not None and result._Ghost__is_loaded(SummonerData):
             return result._data[SummonerData]
         else:
             raise NotFoundError
+
+    ##############
+    # League API #
+    ##############
+
+    # Challenger
+
+    @get.register(ChallengerLeague)
+    @validate_query(uniquekeys.validate_challenger_league_query, uniquekeys.convert_region_to_platform)
+    def get_challenger_league_summoner(
+        self, query: Mapping[str, Any], context: PipelineContext = None
+    ) -> ChallengerLeague:
+        return self._get(ChallengerLeague, query, uniquekeys.for_challenger_league_query, context)
+
+    @put.register(ChallengerLeague)
+    def put_challenger_league_summoner(self, item: ChallengerLeague, context: PipelineContext = None) -> None:
+        self._put(ChallengerLeague, item, uniquekeys.for_challenger_league, context=context)
+
+    # Grandmaster
+
+    @get.register(GrandmasterLeague)
+    @validate_query(uniquekeys.validate_grandmaster_league_query, uniquekeys.convert_region_to_platform)
+    def get_grandmaster_league_summoner(
+        self, query: Mapping[str, Any], context: PipelineContext = None
+    ) -> GrandmasterLeague:
+        return self._get(GrandmasterLeague, query, uniquekeys.for_grandmaster_league_query, context)
+
+    @put.register(GrandmasterLeague)
+    def put_grandmaster_league_summoner(self, item: GrandmasterLeague, context: PipelineContext = None) -> None:
+        self._put(GrandmasterLeague, item, uniquekeys.for_grandmaster_league, context=context)
+
+    # Master
+
+    @get.register(MasterLeague)
+    @validate_query(uniquekeys.validate_master_league_query, uniquekeys.convert_region_to_platform)
+    def get_master_league_summoner(self, query: Mapping[str, Any], context: PipelineContext = None) -> MasterLeague:
+        return self._get(MasterLeague, query, uniquekeys.for_master_league_query, context)
+
+    @put.register(MasterLeague)
+    def put_master_league_summoner(self, item: MasterLeague, context: PipelineContext = None) -> None:
+        self._put(MasterLeague, item, uniquekeys.for_master_league, context=context)
+
+    # League Summoner
+
+    @get.register(LeagueSummonerEntries)
+    @validate_query(uniquekeys.validate_league_entries_query, util.convert_region_to_platform)
+    def get_league_summoner_entries(self, query: Mapping[str, Any], context: PipelineContext = None) -> Summoner:
+        return self._get(LeagueSummonerEntries, query, uniquekeys.for_league_summoner_entries_query, context)
+
+    @get_many.register(LeagueSummonerEntries)
+    @validate_query(uniquekeys.validate_many_league_entries_query, util.convert_region_to_platform)
+    def get_many_league_summoner_entries(
+        self, query: Mapping[str, Any], context: PipelineContext = None
+    ) -> Generator[LeagueSummonerEntries, None, None]:
+        return self._get_many(LeagueSummonerEntries, query, uniquekeys.for_many_league_summoner_entries_query, context)
+
+    @put.register(LeagueSummonerEntries)
+    def put_league_summoner_entries(self, item: LeagueSummonerEntries, context: PipelineContext = None) -> None:
+        self._put(LeagueSummonerEntries, item, uniquekeys.for_league_summoner_entries, context=context)
+
+    @put_many.register(LeagueSummonerEntries)
+    def put_many_league_summoner_entries(self, items: Iterable[Summoner], context: PipelineContext = None) -> None:
+        self._put_many(LeagueSummonerEntries, items, uniquekeys.for_league_summoner_entries, context=context)
+
+    # @get.register(LeagueSummonerEntriesData)
+    # @validate_query(uniquekeys.validate_league_entries_query, util.convert_region_to_platform)
+    # def get_league_summoner_data(
+    #     self, query: Mapping[str, Any], context: PipelineContext = None
+    # ) -> LeagueSummonerEntriesData:
+    #     print(query)
+    #     result = self.get_league_summoner_entries(query=query, context=context)
+    #     if result._data[LeagueSummonerEntriesData] is not None and result._Ghost__is_loaded(LeagueSummonerEntriesData):
+    #         return result._data[LeagueSummonerEntriesData]
+    #     else:
+    #         raise NotFoundError
